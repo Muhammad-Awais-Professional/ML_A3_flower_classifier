@@ -1,91 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="transition-colors duration-500">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Iris Flower Classifier</title>
 
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
 
   <style>
     body {
       font-family: 'Poppins', sans-serif;
+      overflow-x: hidden; /* prevent horizontal scroll */
     }
+    @keyframes float {
+      0%   { transform: translate(0,0) scale(1); }
+      50%  { transform: translate(20px,-20px) scale(1.1); }
+      100% { transform: translate(0,0) scale(1); }
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.6;
+      animation: float 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    /* only show blobs on md+ */
+    @media (min-width: 768px) {
+      .blob-1 { width: 300px; height: 300px; background: #ff80b5; top: -50px; left: -50px; }
+      .blob-2 { width: 400px; height: 400px; background: #9089fc; bottom: -100px; right: -100px; animation-duration:10s; }
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
   </style>
 </head>
-<body class="min-h-screen bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center p-4">
 
-  <div class="bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-2xl max-w-xl w-full p-8">
-    <h1 class="text-4xl font-bold text-center text-indigo-700 mb-8">
+<body class="relative flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-indigo-500 to-pink-500">
+
+  <!-- Floating blobs (md+) -->
+  <div class="blob blob-1 hidden md:block"></div>
+  <div class="blob blob-2 hidden md:block"></div>
+
+  <!-- Main card -->
+  <div class="relative w-full max-w-lg p-6 mx-auto bg-white bg-opacity-20 backdrop-blur-md border border-white/20 rounded-3xl shadow-xl transition-colors duration-500">
+    <h1 class="text-4xl sm:text-5xl font-bold text-center text-indigo-700 mb-6 animate-bounce">
       🌸 Iris Flower Classifier
     </h1>
 
-    <form method="post" class="space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Sepal Length</label>
+    <form method="post" class="space-y-5">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {% for field,label in [
+          ('sepal_length','Sepal Length'),
+          ('sepal_width','Sepal Width'),
+          ('petal_length','Petal Length'),
+          ('petal_width','Petal Width')
+        ] %}
+        <div class="relative">
           <input
-            type="number"
-            step="any"
-            name="sepal_length"
+            type="number" step="any"
+            name="{{ field }}" id="{{ field }}"
             required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
+            class="peer w-full px-4 py-3 bg-transparent border-b-2 border-gray-300 focus:border-indigo-400 outline-none transition"
+          />
+          <label
+            for="{{ field }}"
+            class="absolute left-4 top-3 text-gray-500 peer-focus:-top-2 peer-focus:text-sm peer-focus:text-indigo-600 transition-all"
           >
+            {{ label }}
+          </label>
         </div>
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Sepal Width</label>
-          <input
-            type="number"
-            step="any"
-            name="sepal_width"
-            required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
-          >
-        </div>
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Petal Length</label>
-          <input
-            type="number"
-            step="any"
-            name="petal_length"
-            required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
-          >
-        </div>
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Petal Width</label>
-          <input
-            type="number"
-            step="any"
-            name="petal_width"
-            required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-300 transition"
-          >
-        </div>
+        {% endfor %}
       </div>
 
-      <button
-        type="submit"
-        class="w-full py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 active:bg-indigo-800 transition"
-      >
+      <button type="submit"
+        class="w-full py-3 bg-gradient-to-r from-indigo-600 to-pink-500 text-white font-semibold rounded-full hover:from-indigo-700 hover:to-pink-600 focus:outline-none transform hover:scale-105 active:scale-95 transition">
         Predict
       </button>
     </form>
 
     {% if result %}
-    <div class="mt-8 p-4 bg-green-50 border-l-4 border-green-400 rounded-lg">
-      <p class="text-green-800 font-semibold mb-1">🔍 Prediction Result</p>
-      <p class="text-gray-700">{{ result }}</p>
+    <div class="mt-6 fade-in">
+      <div class="p-4 bg-green-50 border-l-4 border-green-400 rounded-lg">
+        <p class="text-green-800 font-semibold mb-1">🔍 Prediction Result</p>
+        <p class="text-gray-700">{{ result }}</p>
+      </div>
+      {% if image_url %}
+      <div class="mt-5 overflow-hidden rounded-xl shadow-lg">
+        <img src="{{ image_url }}" alt="Predicted Iris"
+             class="w-full object-cover hover:scale-105 transform transition"/>
+      </div>
+      {% endif %}
     </div>
     {% endif %}
 
-    <footer class="mt-10 text-center text-gray-500 text-sm">
-      Powered by <a href="https://vercel.com" class="text-indigo-600 hover:underline">Vercel</a> &amp; <a href="https://huggingface.co" class="text-indigo-600 hover:underline">Hugging Face</a>
+    <footer class="mt-8 text-center text-gray-700 text-sm">
+      Built by
+      <a href="https://muhammadawaisportfolio.netlify.app/" target="_blank"
+         class="text-indigo-600 hover:underline">
+        Muhammad Awais Khan
+      </a>
     </footer>
   </div>
-
 </body>
 </html>
