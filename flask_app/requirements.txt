@@ -1,0 +1,6 @@
+Flask
+tensorflow
+scikit-learn
+joblib
+huggingface_hub
+vercel-wsgi
