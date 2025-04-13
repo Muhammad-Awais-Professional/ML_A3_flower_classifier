@@ -1,6 +1,12 @@
-##The folders also contain the README files, check them out for detailed usage guidelines. 
+## 🌸 Flower Classifier Web App
 
-The site is hosted on vercel, accessable using the following link:-
+The folders also contain `README` files — be sure to check them out for detailed usage guidelines.
 
-https://flowerclassifiervercel.vercel.app/
+### 🔗 Hosted on Vercel  
+You can access the live site here:  
+👉 [https://flowerclassifiervercel.vercel.app/](https://flowerclassifiervercel.vercel.app/)
 
+---
+
+### 🔍 Preview  
+![Flower Classifier Preview](https://github.com/Muhammad-Awais-Professional/ML_A3_flower_classifier/blob/main/preview.png)  
