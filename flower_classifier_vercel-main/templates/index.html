@@ -31,12 +31,12 @@
     @media (min-width: 768px) {
       .blob-1 {
         width: 250px; height: 250px;
-        background: #6b21a8; /* deep purple */
+        background: #6b21a8;
         top: -80px; left: -80px;
       }
       .blob-2 {
         width: 300px; height: 300px;
-        background: #db2777; /* fuchsia */
+        background: #db2777;
         bottom: -100px; right: -100px;
         animation-duration:10s;
       }
@@ -61,7 +61,7 @@
     </h1>
 
     <form method="post" class="text-white space-y-6">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-white">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {% for field,label in [
           ('sepal_length','Sepal Length'),
           ('sepal_width','Sepal Width'),
@@ -73,11 +73,15 @@
             type="number" step="any"
             name="{{ field }}" id="{{ field }}"
             required
+            placeholder="{{ label }}"
             class="peer w-full px-4 py-3 bg-gray-700 bg-opacity-50 border-b-2 border-gray-600 text-white placeholder-transparent focus:border-pink-500 outline-none transition"
           />
           <label
             for="{{ field }}"
-            class="absolute left-4 top-3 text-white peer-focus:-top-2 peer-focus:text-sm peer-focus:text-pink-400 transition-all"
+            class="absolute left-4 transition-all text-white
+                   -top-2 text-sm
+                   peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-white
+                   peer-focus:-top-2 peer-focus:text-sm peer-focus:text-pink-400"
           >
             {{ label }}
           </label>
@@ -92,25 +96,23 @@
     </form>
 
     {% if result %}
-      <div class="mt-8 fade-in">
-        <div class="p-4 bg-gray-900 bg-opacity-60 border-l-4 border-pink-500 rounded-lg">
-          <p class="text-pink-400 font-semibold mb-2">🔍 Prediction Result</p>
-          <p class="text-white text-base sm:text-lg">{{ result }}</p>
-        </div>
-        {% if image_url %}
-          <div class="mt-5 overflow-hidden rounded-xl shadow-lg">
-            <img
-              src="{{ image_url }}"
-              alt="Predicted Iris"
-              class="w-full object-cover hover:scale-105 transform transition"
-            />
-            <!-- this caption is now white -->
-            <p class="mt-2 text-center text-white">Predicted Iris</p>
-          </div>
-        {% endif %}
+    <div class="mt-8 fade-in">
+      <div class="p-4 bg-gray-900 bg-opacity-60 border-l-4 border-pink-500 rounded-lg">
+        <p class="text-pink-400 font-semibold mb-2">🔍 Prediction Result</p>
+        <p class="text-white text-base sm:text-lg">{{ result }}</p>
       </div>
+      {% if image_url %}
+      <div class="mt-5 flex justify-center">
+        <img
+          src="{{ image_url }}"
+          alt="Predicted Iris"
+          class="max-h-60 max-w-full w-auto object-contain rounded-xl shadow-lg transition-transform hover:scale-105"
+        />
+      </div>
+      <p class="mt-2 text-center text-white">Predicted Iris</p>
+      {% endif %}
+    </div>
     {% endif %}
-
 
     <footer class="mt-8 text-center text-white text-sm sm:text-base">
       Built by
