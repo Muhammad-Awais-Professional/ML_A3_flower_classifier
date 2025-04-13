@@ -13,7 +13,7 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      overflow-x: hidden; /* prevent horizontal scroll */
+      overflow: hidden; /* hide blob overflow */
     }
     @keyframes float {
       0%   { transform: translate(0,0) scale(1); }
@@ -28,10 +28,18 @@
       animation: float 8s ease-in-out infinite;
       pointer-events: none;
     }
-    /* only show blobs on md+ */
     @media (min-width: 768px) {
-      .blob-1 { width: 300px; height: 300px; background: #ff80b5; top: -50px; left: -50px; }
-      .blob-2 { width: 400px; height: 400px; background: #9089fc; bottom: -100px; right: -100px; animation-duration:10s; }
+      .blob-1 {
+        width: 250px; height: 250px;
+        background: #6b21a8; /* deep purple */
+        top: -80px; left: -80px;
+      }
+      .blob-2 {
+        width: 300px; height: 300px;
+        background: #db2777; /* fuchsia */
+        bottom: -100px; right: -100px;
+        animation-duration:10s;
+      }
     }
     .fade-in {
       opacity: 0;
@@ -41,20 +49,19 @@
   </style>
 </head>
 
-<body class="relative flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-indigo-500 to-pink-500">
-
+<body class="relative flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-gray-900 to-black">
   <!-- Floating blobs (md+) -->
   <div class="blob blob-1 hidden md:block"></div>
   <div class="blob blob-2 hidden md:block"></div>
 
   <!-- Main card -->
-  <div class="relative w-full max-w-lg p-6 mx-auto bg-white bg-opacity-20 backdrop-blur-md border border-white/20 rounded-3xl shadow-xl transition-colors duration-500">
-    <h1 class="text-4xl sm:text-5xl font-bold text-center text-indigo-700 mb-6 animate-bounce">
+  <div class="relative w-full max-w-xl sm:max-w-lg p-6 sm:p-8 bg-gray-800 bg-opacity-70 backdrop-blur-md border border-gray-700 rounded-3xl shadow-xl">
+    <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center text-white mb-6">
       🌸 Iris Flower Classifier
     </h1>
 
-    <form method="post" class="space-y-5">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <form method="post" class="text-white space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-white">
         {% for field,label in [
           ('sepal_length','Sepal Length'),
           ('sepal_width','Sepal Width'),
@@ -66,11 +73,11 @@
             type="number" step="any"
             name="{{ field }}" id="{{ field }}"
             required
-            class="peer w-full px-4 py-3 bg-transparent border-b-2 border-gray-300 focus:border-indigo-400 outline-none transition"
+            class="peer w-full px-4 py-3 bg-gray-700 bg-opacity-50 border-b-2 border-gray-600 text-white placeholder-transparent focus:border-pink-500 outline-none transition"
           />
           <label
             for="{{ field }}"
-            class="absolute left-4 top-3 text-gray-500 peer-focus:-top-2 peer-focus:text-sm peer-focus:text-indigo-600 transition-all"
+            class="absolute left-4 top-3 text-white peer-focus:-top-2 peer-focus:text-sm peer-focus:text-pink-400 transition-all"
           >
             {{ label }}
           </label>
@@ -79,30 +86,36 @@
       </div>
 
       <button type="submit"
-        class="w-full py-3 bg-gradient-to-r from-indigo-600 to-pink-500 text-white font-semibold rounded-full hover:from-indigo-700 hover:to-pink-600 focus:outline-none transform hover:scale-105 active:scale-95 transition">
+        class="w-full py-3 text-lg sm:text-xl font-semibold rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 focus:outline-none transform hover:scale-105 active:scale-95 transition">
         Predict
       </button>
     </form>
 
     {% if result %}
-    <div class="mt-6 fade-in">
-      <div class="p-4 bg-green-50 border-l-4 border-green-400 rounded-lg">
-        <p class="text-green-800 font-semibold mb-1">🔍 Prediction Result</p>
-        <p class="text-gray-700">{{ result }}</p>
+      <div class="mt-8 fade-in">
+        <div class="p-4 bg-gray-900 bg-opacity-60 border-l-4 border-pink-500 rounded-lg">
+          <p class="text-pink-400 font-semibold mb-2">🔍 Prediction Result</p>
+          <p class="text-white text-base sm:text-lg">{{ result }}</p>
+        </div>
+        {% if image_url %}
+          <div class="mt-5 overflow-hidden rounded-xl shadow-lg">
+            <img
+              src="{{ image_url }}"
+              alt="Predicted Iris"
+              class="w-full object-cover hover:scale-105 transform transition"
+            />
+            <!-- this caption is now white -->
+            <p class="mt-2 text-center text-white">Predicted Iris</p>
+          </div>
+        {% endif %}
       </div>
-      {% if image_url %}
-      <div class="mt-5 overflow-hidden rounded-xl shadow-lg">
-        <img src="{{ image_url }}" alt="Predicted Iris"
-             class="w-full object-cover hover:scale-105 transform transition"/>
-      </div>
-      {% endif %}
-    </div>
     {% endif %}
 
-    <footer class="mt-8 text-center text-gray-700 text-sm">
+
+    <footer class="mt-8 text-center text-white text-sm sm:text-base">
       Built by
       <a href="https://muhammadawaisportfolio.netlify.app/" target="_blank"
-         class="text-indigo-600 hover:underline">
+         class="text-pink-400 hover:underline">
         Muhammad Awais Khan
       </a>
     </footer>
